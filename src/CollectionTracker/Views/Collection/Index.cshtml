@@ -1,0 +1,57 @@
+﻿@using CollectionTracker.Models
+@model CollectionViewModel
+
+<h3>Need</h3>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Owned</th>
+			<th>Rarity</th>
+			<th>Set</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.Cards)
+		{
+			if (Model.Collection[(string)item["code"]] != null && (int)Model.Collection[(string)item["code"]]["quantity"] < 2)
+			{
+				<tr>
+					<th>@item["name"]</th>
+					<th>@((int)Model.Collection[(string)item["code"]]["quantity"])</th>
+					<th>@item["rarity_code"]</th>
+					<th>@item["set_name"] @item["position"]</th>
+				</tr>
+			}
+		}
+	</tbody>
+</table>
+
+<h3>Have</h3>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Avail.</th>
+			<th>Rarity</th>
+			<th>Set</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.Cards)
+		{
+			if (Model.Collection[(string)item["code"]] != null && (int)Model.Collection[(string)item["code"]]["quantity"] > 2)
+			{
+				<tr>
+					<th>@item["name"]</th>
+					<th>@((int)Model.Collection[(string)item["code"]]["quantity"] - 2)</th>
+					<th>@item["rarity_code"]</th>
+					<th>@item["set_name"] @item["position"]</th>
+				</tr>
+			}
+		}
+	</tbody>
+</table>
+
+
+@*<pre>@Model.Collection.ToString()</pre>*@
