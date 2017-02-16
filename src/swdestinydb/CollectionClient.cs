@@ -11,13 +11,15 @@ namespace swdestinydb
     public class CollectionClient
     {
 		private const string BaseUrl = "http://swdestinydb.com";
+		private const string RememberMeCookie = "xxx";
 
 		public async Task<JObject> GetCollectionAsync()
         {
 			var apiUrl = "/collection/";
 			var baseUri = new Uri(BaseUrl);
 			var cookies = new CookieContainer();
-			cookies.Add(baseUri, new Cookie("REMEMBERME", "xxx"));
+			if (RememberMeCookie == "xxx") throw new Exception("You need to set the value of the REMEMBERME cookie in CollectionClient.cs. Log into swdestinydb.com and find the REMEMBERME cookie and copy-paste the value into the RememberMeCookie value at the top of the CollectionClient class.");
+			cookies.Add(baseUri, new Cookie("REMEMBERME", RememberMeCookie));
 
 			string responseHtml;
 			using (var handler = new HttpClientHandler() { CookieContainer = cookies })
