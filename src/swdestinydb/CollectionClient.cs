@@ -5,15 +5,17 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using swdestinydb.Models;
 
 namespace swdestinydb
 {
     public class CollectionClient
     {
 		private const string BaseUrl = "http://swdestinydb.com";
-		private const string RememberMeCookie = "xxx";
+		private const string RememberMeCookie = "QXBwQnVuZGxlXEVudGl0eVxVc2VyOlJtbHVjM1JsY2c9PToxNTE1MDk1NzM4OjVmZDM0NDNjMWVmYjVkNWRhOWQ3YTVkMjQ2YWFhMzA2ZWRhMmFjNjNmMmJiZmZjNDgyYTFkZjc0Njc5OGMzMDY";
 
-		public async Task<JObject> GetCollectionAsync()
+		public async Task<IEnumerable<CollectionItem>> GetCollectionAsync()
         {
 			var apiUrl = "/collection/";
 			var baseUri = new Uri(BaseUrl);
@@ -32,18 +34,19 @@ namespace swdestinydb
 
 			var html = new HtmlAgilityPack.HtmlDocument();
 			html.LoadHtml(responseHtml);
-			var script = html.DocumentNode.Descendants().Where(n => n.Name == "script" && n.InnerHtml.Contains("app.collection.init")).First().InnerText;
+			var script = html.DocumentNode.Descendants().First(n => n.Name == "script" && n.InnerHtml.Contains("app.collection.init")).InnerText;
 
 			// At this point, I'd use Jurassic to parse and get the data, but can't because Jurassic doesn't support .net core yet
 			string collectionJson = script.Split('(', ')')[1];
 
-			var obj = JObject.Parse(collectionJson);
+			//var obj = JObject.Parse(collectionJson);
+	        var results = JsonConvert.DeserializeObject<IEnumerable<CollectionItem>>(collectionJson, new CollectionItemJsonConverter());
 
-			return obj;
+			return results;
 
 		}
 
-		public async Task<JArray> GetCardsAsync()
+		public async Task<IEnumerable<Card>> GetCardsAsync()
 		{
 			var apiUrl = "/api/public/cards/AW.json";
 
@@ -53,7 +56,7 @@ namespace swdestinydb
 				response.EnsureSuccessStatusCode();
 
 				var json = await response.Content.ReadAsStringAsync();
-				var obj = JArray.Parse(json);
+				var obj = JsonConvert.DeserializeObject<IEnumerable<Card>>(json);
 				return obj;
 			}
 		}

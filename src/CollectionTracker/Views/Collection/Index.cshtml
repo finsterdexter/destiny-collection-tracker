@@ -12,15 +12,15 @@
 		</tr>
 	</thead>
 	<tbody>
-		@foreach (var item in Model.Cards)
+		@foreach (var item in Model.Collection)
 		{
-			if (Model.Collection[(string)item["code"]] != null && (int)Model.Collection[(string)item["code"]]["quantity"] < 2)
+			if (item.Quantity < 2)
 			{
 				<tr>
-					<th>@item["name"]</th>
-					<th>@((int)Model.Collection[(string)item["code"]]["quantity"])</th>
-					<th>@item["rarity_code"]</th>
-					<th>@item["set_name"] @item["position"]</th>
+					<th>@item.Name</th>
+					<th>@item.Quantity</th>
+					<th>@item.Rarity</th>
+					<th>@item.SetName @item.SetPosition</th>
 				</tr>
 			}
 		}
@@ -38,15 +38,15 @@
 		</tr>
 	</thead>
 	<tbody>
-		@foreach (var item in Model.Cards)
+		@foreach (var item in Model.Collection)
 		{
-			if (Model.Collection[(string)item["code"]] != null && (int)Model.Collection[(string)item["code"]]["quantity"] > 2)
+			if (item.Quantity > 2)
 			{
 				<tr>
-					<th>@item["name"]</th>
-					<th>@((int)Model.Collection[(string)item["code"]]["quantity"] - 2)</th>
-					<th>@item["rarity_code"]</th>
-					<th>@item["set_name"] @item["position"]</th>
+					<th>@item.Name</th>
+					<th>@(item.Quantity - 2)</th>
+					<th>@item.Rarity</th>
+					<th>@item.SetName @item.SetPosition</th>
 				</tr>
 			}
 		}
